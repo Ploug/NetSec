@@ -1,1 +1,3 @@
 com\ur\urcap\bachelor\networksecurity\impl\Activator.class
+com\ur\urcap\bachelor\networksecurity\impl\NetworkSecurityInstallationNodeContribution.class
+com\ur\urcap\bachelor\networksecurity\impl\NetworkSecurityInstallationNodeService.class

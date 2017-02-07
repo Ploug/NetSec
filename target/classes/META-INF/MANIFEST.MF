@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1486471912705
-Build-Jdk: 1.8.0_66
+Bnd-LastModified: 1486473384984
+Build-Jdk: 1.8.0_111
 Built-By: frede
 Bundle-Activator: com.ur.urcap.bachelor.networksecurity.impl.Activator
 Bundle-Category: URCap
@@ -15,5 +15,10 @@ Bundle-SymbolicName: com.ur.urcap.bachelor.networksecurity
 Bundle-Vendor: Universal Robots
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
-Import-Package: org.osgi.framework;version="[1.6,2)"
+Import-Package: com.ur.urcap.api.contribution;version="[1.0.0,2.0.0)",co
+ m.ur.urcap.api.domain;version="[1.0.0,2.0.0)",com.ur.urcap.api.domain.d
+ ata;version="[1.0.0,2.0.0)",com.ur.urcap.api.domain.script;version="[1.
+ 0.0,2.0.0)",com.ur.urcap.api.ui.annotation;version="[1.0.0,2.0.0)",com.
+ ur.urcap.api.ui.component;version="[1.0.0,2.0.0)",org.osgi.framework;ve
+ rsion="[1.6,2)"
 Tool: Bnd-2.1.0.20130426-122213
