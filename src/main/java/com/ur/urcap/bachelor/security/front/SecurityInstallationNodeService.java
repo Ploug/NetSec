@@ -11,6 +11,7 @@ public class SecurityInstallationNodeService implements InstallationNodeService
 
     public SecurityInstallationNodeService()
     {
+      
     }
 
     @Override
