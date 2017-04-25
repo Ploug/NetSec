@@ -6,9 +6,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.ur.urcap.bachelor</groupId>
-	<artifactId>networksecurity</artifactId>
+	<artifactId>security</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>NetworkSecurity</name>
+	<name>Security</name>
 	<packaging>bundle</packaging>
 
 	<distributionManagement>
@@ -31,25 +31,21 @@
 		<!--         that comes along with your URCap                           -->
 		<!--********************************************************************-->
 		<!--******************* BEGINNING OF URCAP META DATA *******************-->
-		<urcap.symbolicname>com.ur.urcap.examples.helloworld</urcap.symbolicname>
+		<urcap.symbolicname>com.ur.urcap.bachelor.security</urcap.symbolicname>
 		<urcap.vendor>Universal Robots</urcap.vendor>
 		<urcap.contactAddress>Energivej 25, 5260 Odense S, Denmark</urcap.contactAddress>
 		<urcap.copyright>Copyright (C) 2009-2016 Universal Robots. All Rights Reserved</urcap.copyright>
-		<urcap.description>Hello World sample URCap</urcap.description>
+		<urcap.description>Security URCap</urcap.description>
 		<urcap.licenseType>Sample license</urcap.licenseType>
 		<!--********************** END OF URCAP META DATA **********************-->
 		<!--********************************************************************-->
 
-		<!--Host and standard user/password for UR Sim running in a VM-->
-                <ursimvm.install.host></ursimvm.install.host>
-                <ursimvm.install.username>ur</ursimvm.install.username>
-                <ursimvm.install.password>easybot</ursimvm.install.password>
 
 		<!--Install path for the UR Sim-->
-		<ursim.home></ursim.home>
+		<ursim.home>/home</ursim.home>
 
 		<!--Host and standard user/password for UR Sim running in a VM-->
-		<ursimvm.install.host></ursimvm.install.host>
+		<ursimvm.install.host>192.168.81.128</ursimvm.install.host>
 		<ursimvm.install.username>ur</ursimvm.install.username>
 		<ursimvm.install.password>easybot</ursimvm.install.password>
 
@@ -85,7 +81,7 @@
 					<instructions>
 						<!--********** DO NOT MODIFY THE ENTRIES OF THIS SECTION **********-->
 						<Bundle-Category>URCap</Bundle-Category>
-						<Bundle-Activator>com.ur.urcap.bachelor.networksecurity.impl.Activator</Bundle-Activator>
+						<Bundle-Activator>com.ur.urcap.bachelor.security.front.Activator</Bundle-Activator>
 						<Bundle-Vendor>${urcap.vendor}</Bundle-Vendor>
 						<Bundle-ContactAddress>${urcap.contactAddress}</Bundle-ContactAddress>
 						<Bundle-Copyright>${urcap.copyright}</Bundle-Copyright>
@@ -112,9 +108,9 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>cp</executable>
-							<commandlineArgs>target/${project.build.finalName}.jar target/${project.build.finalName}.urcap</commandlineArgs>
-							<workingDirectory>.</workingDirectory>
+							<executable>copy</executable>
+							<commandlineArgs>${project.build.finalName}.jar ${project.build.finalName}_cap.urcap</commandlineArgs>
+							<workingDirectory>./target</workingDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -159,6 +155,11 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
+	 <dependency>
+	  <groupId>jline</groupId>
+	  <artifactId>jline</artifactId>
+	  <version>2.14.3</version>
+	 </dependency>
 	</dependencies>
 
 	<profiles>
@@ -178,8 +179,8 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>sshpass</executable>
-									<commandlineArgs>-p ${urcap.install.password} scp -o StrictHostKeyChecking=no target/${project.build.finalName}.jar ${urcap.install.username}@${urcap.install.host}:/root/.urcaps/${urcap.symbolicname}.jar</commandlineArgs>
+									<executable>pscp</executable>
+									<commandlineArgs>-pw ${ursimvm.install.password} target/${project.build.finalName}_cap.urcap ${ursimvm.install.username}@${ursimvm.install.host}:/home/ur/ursim-current/.urcaps/${urcap.symbolicname}.jar</commandlineArgs>
 									<workingDirectory>.</workingDirectory>
 								</configuration>
 							</execution>
@@ -190,8 +191,8 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>sshpass</executable>
-									<commandlineArgs>-p ${urcap.install.password} ssh ${urcap.install.username}@${urcap.install.host} pkill java</commandlineArgs>
+									<executable>plink</executable>
+									<commandlineArgs>-ssh ${ursimvm.install.username}@${ursimvm.install.host} -pw ${ursimvm.install.password} pkill java</commandlineArgs>
 									<workingDirectory>.</workingDirectory>
 								</configuration>
 							</execution>
@@ -216,7 +217,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>cp</executable>
+									<executable>copy</executable>
 									<commandlineArgs>target/${project.build.finalName}.jar ${user.home}/.urcaps/${urcap.symbolicname}.jar</commandlineArgs>
 									<workingDirectory>.</workingDirectory>
 								</configuration>
@@ -242,7 +243,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>cp</executable>
+									<executable>copy</executable>
 									<commandlineArgs>target/${project.build.finalName}.jar ${ursim.home}/.urcaps/${urcap.symbolicname}.jar</commandlineArgs>
 									<workingDirectory>.</workingDirectory>
 								</configuration>
