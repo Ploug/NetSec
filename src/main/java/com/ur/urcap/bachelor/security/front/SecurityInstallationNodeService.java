@@ -1,4 +1,4 @@
-package com.ur.urcap.bachelor.security.impl;
+package com.ur.urcap.bachelor.security.front;
 
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.InstallationNodeService;
@@ -22,7 +22,7 @@ public class SecurityInstallationNodeService implements InstallationNodeService
     @Override
     public String getTitle()
     {
-        return "Network Security";
+        return "Security";
     }
 
     @Override

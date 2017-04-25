@@ -1,4 +1,4 @@
-package com.ur.urcap.bachelor.security.impl;
+package com.ur.urcap.bachelor.security.front;
 
 import com.ur.urcap.api.contribution.InstallationNodeService;
 import org.osgi.framework.BundleActivator;
