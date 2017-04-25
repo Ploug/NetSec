@@ -108,7 +108,7 @@
 							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<executable>copy</executable>
+							<executable>cp</executable>
 							<commandlineArgs>${project.build.finalName}.jar ${project.build.finalName}_cap.urcap</commandlineArgs>
 							<workingDirectory>./target</workingDirectory>
 						</configuration>
@@ -217,7 +217,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>copy</executable>
+									<executable>cp</executable>
 									<commandlineArgs>target/${project.build.finalName}.jar ${user.home}/.urcaps/${urcap.symbolicname}.jar</commandlineArgs>
 									<workingDirectory>.</workingDirectory>
 								</configuration>
@@ -243,7 +243,7 @@
 									<goal>exec</goal>
 								</goals>
 								<configuration>
-									<executable>copy</executable>
+									<executable>cp</executable>
 									<commandlineArgs>target/${project.build.finalName}.jar ${ursim.home}/.urcaps/${urcap.symbolicname}.jar</commandlineArgs>
 									<workingDirectory>.</workingDirectory>
 								</configuration>
