@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ur.urcap.bachelor.networksecurity.impl;
+package com.ur.urcap.bachelor.security.business;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
