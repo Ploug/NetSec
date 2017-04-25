@@ -1,4 +1,4 @@
-package com.ur.urcap.bachelor.networksecurity.impl;
+package com.ur.urcap.bachelor.security.front;
 
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.InstallationNodeService;
@@ -6,10 +6,10 @@ import com.ur.urcap.api.domain.URCapAPI;
 import com.ur.urcap.api.domain.data.DataModel;
 import java.io.InputStream;
 
-public class NetworkSecurityInstallationNodeService implements InstallationNodeService
+public class SecurityInstallationNodeService implements InstallationNodeService
 {
 
-    public NetworkSecurityInstallationNodeService()
+    public SecurityInstallationNodeService()
     {
       
     }
@@ -17,13 +17,13 @@ public class NetworkSecurityInstallationNodeService implements InstallationNodeS
     @Override
     public InstallationNodeContribution createInstallationNode(URCapAPI api, DataModel model)
     {
-        return new NetworkSecurityInstallationNodeContribution(model);
+        return new SecurityInstallationNodeContribution(model);
     }
 
     @Override
     public String getTitle()
     {
-        return "Network Security";
+        return "Security";
     }
 
     @Override

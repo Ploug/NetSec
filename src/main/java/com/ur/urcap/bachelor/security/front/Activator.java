@@ -1,4 +1,4 @@
-package com.ur.urcap.bachelor.networksecurity.impl;
+package com.ur.urcap.bachelor.security.front;
 
 import com.ur.urcap.api.contribution.InstallationNodeService;
 import org.osgi.framework.BundleActivator;
@@ -9,7 +9,7 @@ public class Activator implements BundleActivator
 
     public void start(BundleContext context) throws Exception
     {
-        NetworkSecurityInstallationNodeService netSecInstall = new NetworkSecurityInstallationNodeService();
+        SecurityInstallationNodeService netSecInstall = new SecurityInstallationNodeService();
 
         context.registerService(InstallationNodeService.class, netSecInstall, null);
     }
