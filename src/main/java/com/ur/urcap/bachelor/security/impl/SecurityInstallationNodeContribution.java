@@ -4,6 +4,7 @@ import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.domain.data.DataModel;
 import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.ui.annotation.Input;
+import com.ur.urcap.api.ui.component.InputButton;
 import com.ur.urcap.api.ui.component.InputEvent;
 import com.ur.urcap.api.ui.component.InputTextField;
 
@@ -12,6 +13,12 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
 
     private static final String POPUPTITLE_KEY = "popuptitle";
     private static final String DEFAULT_VALUE = "Network security foo";
+    private static final String PERMISSIONS = "Permissions";
+    private static final String ADVSETTINGS = "Advances Settings";
+    private static final String CHANGEPSW = "Change Password";
+    private static final String SEEMORE = "See more";
+    
+    
 
     private DataModel model;
 
@@ -19,9 +26,51 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         this.model = model;
     }
-
+    
+    @Input(id = PERMISSIONS)
+    private InputButton permissionsButton;
+    
+    @Input(id = ADVSETTINGS)
+    private InputButton advSettingsButton;
+    
+    @Input(id = CHANGEPSW)
+    private InputButton changePswButton;
+    
+    @Input(id = SEEMORE)
+    private InputButton seeMoreButton;
+    
     @Input(id = POPUPTITLE_KEY)
     private InputTextField popupTitleField;
+    
+    @Input(id = PERMISSIONS)
+    public void onPermissionsClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            
+            
+        }
+    }
+    
+    @Input(id = ADVSETTINGS)
+    public void onAdvSettingsClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            
+            
+        }
+    }
+    
+    @Input(id = CHANGEPSW)
+    public void onChangePswClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            
+            
+        }
+    }
 
     @Input(id = POPUPTITLE_KEY)
     public void onMessageChange(InputEvent event)
@@ -36,6 +85,10 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     public void openView()
     {
         popupTitleField.setText(getPopupTitle());
+        permissionsButton.setText("Permissions");
+        advSettingsButton.setText("Advanced Settings");
+        changePswButton.setText("Change Password");
+        seeMoreButton.setText("See more");
     }
 
     @Override
