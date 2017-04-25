@@ -7,12 +7,12 @@
 
 
             input{
-                width: 100%;
-                height: 30px;
+                width: 200px;
+                height: 25px;
                 display: inline;
             }
             label{
-                width: 100%;
+                width: 200px;
                 display: inline;
             }
             h1, h2, h3, h4{
@@ -31,29 +31,161 @@
                 width: 40%;
                 height: 25px;
                 display: inline-block;
+            }
 
+            #permissionsConfig{
+                display: inline-block;
+                width: 500px;
+            }
+            #permission{
+                display: inline-block;
+                width: 100px;
+            }
+            #onOff01{
+                display: inline-block;
+                width: 45px;
+            }
+            #onOff02{
+                display: inline-block;
+                width: 45px;
+            }
+            #exit{
+                display: inline;
+                width: 100px;
+            }
+            #back{
+                display: block;
+                width: 600px;
+                padding-top: 100px;
+            }
+            #name{
+                display: inline-block;
+                width: 250px;
+
+            }
+            #id{
+                display: inline-block;
+                width: 50px;
+            }
+            #Xx{
+                display: inline-block;
+                width: 100px;  
+            }
+            #Yy{
+                display: inline-block;
+                width: 100px;  
+            }
+            #setPsw{
+                display: inline;
+                width: 400px;
             }
 
         </style>
     </head>
     <body>
         <div class="spacer">&nbsp;</div>
-        <h2>Security</h2>
+        <div id="mainScreen">
+            <h2>Security</h2>
 
-        <form id="config">
-            <h3>Configurations</h3>
-            <br><br><input id="Permissions" type="button"/><br>
-            <input id="AdvancedSettings" type="button"/><br>
-            <input id="ChangePsw" type="button"/>
-        </form>
+            <form id="config">
+                <h3>Configurations</h3>
+                <input id="permissions" type="button"/><br>
+                <input id="advancedSettings" type="button"/><br>
+                <input id="changePsw" type="button"/>
+            </form>
+
+            <form id="info">
+                <h3>History</h3>
+                <b>Something Something</b> <br> <label id="ip">xx:yy:zz</label><br>
+                <input id="seeMore" type="button"/>
+            </form>
+        </div>
+
+        <div id="permissionScreen">
+
+            <form id="permissionsConfig">
+                <h2>Security Permissions</h2>
+                <hr>
+                <b>URCap1:</b> <label id="Lirum">Temporary</label><br>
+                <hr>
+                <b>URCap2:</b> <label id="Larum">Temporary</label><br>
+                <hr>
+            </form>
+
+            <form id="permission">
+
+                <hr>
+                <input id="onOff01" type="button"/>
+                <input id="onOff02" type="button"/>
+                <hr>
+                <input id="onOff01" type="button"/>
+                <input id="onOff02" type="button"/>
+                <hr>
+            </form>
+
+            <form id="back">
+                <input id="exit" type="button"/>
+            </form>
+        </div>
+
+        <div  id="advancedSettings">
 
 
-        <form id="info">
-            <h3>History</h3><br><br>
-            <br><br><b>Something Something</b> <br> <label id="ip">xx:yy:zz</label><br>
-            <input id="seeMore" type="button"/>
-        </form>
+            <form id="name">
+                <h2>Security Permissions</h2>
+                <label id="Lirum"><b>Name</b></label><br>
+                <hr>
+                <label id="Lirum">URCap1</label><br>
+                <hr>
+                <label id="Larum">URCap2</label><br>
+                <hr>
+            </form>
 
+            <form id="id">
+                <label id="Lirum"><b>ID</b></label><br>
+                <hr>
+                <label id="Lirum">U01</label><br>
+                <hr>
+                <label id="Lirum">U02</label><br>
+                <hr>
+            </form>
+            <form id="Xx">
+                <label id="Lirum"><b>Xx</b></label><br>
+                <hr>
+                <label id="Lirum">Xx</label><br>
+                <hr>
+                <label id="Lirum">Xx</label><br>
+                <hr>
+            </form>
+
+            <form id="Yy">
+                <label id="Lirum"><b>Yy</b></label><br>
+                <hr>
+                <label id="Lirum">Yy</label><br>
+                <hr>
+                <label id="Lirum">Yy</label><br>
+                <hr>
+            </form>
+
+            <form id="back">
+                <input id="exit" type="button"/>
+            </form>
+
+        </div>
+
+        <div id="changePsw">
+            <form id="setPsw">
+                <h2>Change Password</h2>
+                <b>Old Password: </b> <br><input id="oldPsw" type="text"/><br>
+                <b>New Password: </b> <br><input id="newPsw" type="text"/><br>
+                <b>Confirm Password: </b> <br><input id="confirmPsw" type="text"/><br>
+
+            </form>
+
+            <form id="back">
+                <input id="exit" type="button"/>
+            </form>
+        </div>
 
     </body>
 </html>

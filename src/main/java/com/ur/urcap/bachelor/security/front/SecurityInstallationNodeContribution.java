@@ -11,9 +11,9 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
 {
 
     private static final String DEFAULT_VALUE = "SecurityDefault";
-    private static final String PERMISSIONS = "Permissions";
-    private static final String ADVSETTINGS = "AdvancedSettings";
-    private static final String CHANGEPSW = "ChangePsw";
+    private static final String PERMISSIONS = "permissions";
+    private static final String ADVSETTINGS = "advancedSettings";
+    private static final String CHANGEPSW = "changePsw";
     private static final String SEEMORE = "seeMore";
 
     private DataModel model;
