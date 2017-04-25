@@ -1,4 +1,4 @@
-package com.ur.urcap.bachelor.networksecurity.impl;
+package com.ur.urcap.bachelor.security.impl;
 
 import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.domain.data.DataModel;
@@ -7,7 +7,7 @@ import com.ur.urcap.api.ui.annotation.Input;
 import com.ur.urcap.api.ui.component.InputEvent;
 import com.ur.urcap.api.ui.component.InputTextField;
 
-public class NetworkSecurityInstallationNodeContribution implements InstallationNodeContribution
+public class SecurityInstallationNodeContribution implements InstallationNodeContribution
 {
 
     private static final String POPUPTITLE_KEY = "popuptitle";
@@ -15,7 +15,7 @@ public class NetworkSecurityInstallationNodeContribution implements Installation
 
     private DataModel model;
 
-    public NetworkSecurityInstallationNodeContribution(DataModel model)
+    public SecurityInstallationNodeContribution(DataModel model)
     {
         this.model = model;
     }

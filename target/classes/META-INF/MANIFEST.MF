@@ -1,17 +1,17 @@
 Manifest-Version: 1.0
-Bnd-LastModified: 1486473384984
-Build-Jdk: 1.8.0_111
+Bnd-LastModified: 1493125784342
+Build-Jdk: 1.8.0_66
 Built-By: frede
-Bundle-Activator: com.ur.urcap.bachelor.networksecurity.impl.Activator
+Bundle-Activator: com.ur.urcap.bachelor.security.impl.Activator
 Bundle-Category: URCap
 Bundle-ContactAddress: Energivej 25, 5260 Odense S, Denmark
 Bundle-Copyright: Copyright (C) 2009-2016 Universal Robots. All Rights R
  eserved
-Bundle-Description: Hello World sample URCap
+Bundle-Description: Secuity URCap
 Bundle-LicenseType: Sample license
 Bundle-ManifestVersion: 2
-Bundle-Name: NetworkSecurity
-Bundle-SymbolicName: com.ur.urcap.bachelor.networksecurity
+Bundle-Name: Security
+Bundle-SymbolicName: com.ur.urcap.bachelor.security
 Bundle-Vendor: Universal Robots
 Bundle-Version: 0.0.1.SNAPSHOT
 Created-By: Apache Maven Bundle Plugin
