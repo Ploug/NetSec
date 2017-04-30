@@ -6,11 +6,14 @@ import com.ur.urcap.api.domain.script.ScriptWriter;
 import com.ur.urcap.api.ui.annotation.Div;
 import com.ur.urcap.api.ui.annotation.Input;
 import com.ur.urcap.api.ui.annotation.Label;
+import com.ur.urcap.api.ui.annotation.Select;
 import com.ur.urcap.api.ui.component.InputButton;
 import com.ur.urcap.api.ui.component.InputEvent;
 import com.ur.urcap.api.ui.component.DivComponent;
 import com.ur.urcap.api.ui.component.InputTextField;
 import com.ur.urcap.api.ui.component.LabelComponent;
+import com.ur.urcap.api.ui.component.SelectDropDownList;
+import com.ur.urcap.bachelor.security.business.URCap;
 import com.ur.urcap.bachelor.security.business.shell.SecurityLinuxMediator;
 import com.ur.urcap.bachelor.security.exceptions.UnsuccessfulCommandException;
 import java.util.logging.Level;
@@ -30,6 +33,11 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private static final String CHANGEPSWBUT = "changePswButton";
     private static final String SEEMORE = "seeMore";
     private static final String EXITB = "exit";
+    private static final String PERMISSION_LIST = "permissionList";
+    private static final String PERMISSION_ROBOT_BUTTON = "Robotting";
+    private static final String PERMISSION_NETWORK_BUTTON = "Networking";
+    private static final String PERMISSION_SHELL_BUTTON = "Shelling";
+    private static final String PERMISSION_UPDATE = "updatePerm";
 
     private DataModel model;
     private SecurityLinuxMediator linMed;
@@ -39,11 +47,26 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         this.model = model;
     }
 
+    @Input(id = PERMISSION_ROBOT_BUTTON)
+    private InputButton permRobButton;
+
+    @Input(id = PERMISSION_NETWORK_BUTTON)
+    private InputButton permNetButton;
+
+    @Input(id = PERMISSION_SHELL_BUTTON)
+    private InputButton permShellButton;
+
+    @Input (id = PERMISSION_UPDATE)
+    private InputButton permUpdate;
+    
     @Div(id = "permissionScreen")
     private DivComponent permissionScreen;
 
     @Div(id = "advancedScreen")
     private DivComponent advancedScreen;
+
+    @Select(id = PERMISSION_LIST)
+    private SelectDropDownList permissionList;
 
     @Div(id = "passwordScreen")
     private DivComponent passwordScreen;
@@ -51,8 +74,6 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     @Div(id = "mainScreen")
     private DivComponent mainScreen;
 
-    @Div(id = "permissionsConfig")
-    private DivComponent permissionsConfig;
 
     @Label(id = "confirmPswError")
     private LabelComponent confirmPswError;
@@ -106,12 +127,63 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         clearLabels();
     }
 
+    private void updatePermButtons()
+    {
+        URCap selectedCap = (URCap) permissionList.getSelectedItem();
+        permRobButton.setText(selectedCap.isRobotControlAllowed() ? "Allowed" : "Denied");
+        permNetButton.setText(selectedCap.isNetworkingAllowed() ? "Allowed" : "Denied");
+        permShellButton.setText(selectedCap.isShellAllowed() ? "Allowed" : "Denied");
+    }
+
+    @Input(id = PERMISSION_UPDATE)
+    public void onPermissionUpdateClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            updatePermButtons();
+        }
+    }
+
     @Input(id = PERMISSIONS)
     public void onPermissionsClick(InputEvent event)
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
+            updatePermButtons();
             changeScreen(permissionScreen);
+        }
+    }
+
+    @Input(id = PERMISSION_SHELL_BUTTON)
+    public void onPermShellClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            URCap selectedCap = (URCap) permissionList.getSelectedItem();
+            selectedCap.setShellPermission(!selectedCap.isShellAllowed());
+            updatePermButtons();
+        }
+    }
+
+    @Input(id = PERMISSION_NETWORK_BUTTON)
+    public void onPermNetClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            URCap selectedCap = (URCap) permissionList.getSelectedItem();
+            selectedCap.setNetworkPermission(!selectedCap.isNetworkingAllowed());
+            updatePermButtons();
+        }
+    }
+
+    @Input(id = PERMISSION_ROBOT_BUTTON)
+    public void onPermRobClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            URCap selectedCap = (URCap) permissionList.getSelectedItem();
+            selectedCap.setRobotControlPermission(!selectedCap.isRobotControlAllowed());
+            updatePermButtons();
         }
     }
 
@@ -247,16 +319,19 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
 
         linMed = new SecurityLinuxMediator("securityGui");
         permissionsButton.setText("Permissions");
-        advSettingsButton.setText("Advanced Settings");
+        advSettingsButton.setText("Firewall settings");
         changePswScreenButton.setText("Change Password");
         changePswButton.setText("Confirm change");
         seeMoreButton.setText("See more");
         exitButton.setText("Back");
+        permUpdate.setText("Update");
         exitButton.setVisible(false);
         permissionScreen.setVisible(false);
         mainScreen.setVisible(true);
         advancedScreen.setVisible(false);
         passwordScreen.setVisible(false);
+        permissionList.setItems(URCap.createTestCaps());
+        
     }
 
     @Override

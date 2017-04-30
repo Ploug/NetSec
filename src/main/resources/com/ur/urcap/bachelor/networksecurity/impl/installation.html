@@ -32,11 +32,11 @@
                 height: 25px;
                 display: inline-block;
             }
-
-            #permissionsConfig{
+            #permissionScreen{
                 display: inline-block;
-                width: 500px;
+                width: 600px;
             }
+
             #permission{
                 display: inline-block;
                 width: 100px;
@@ -99,24 +99,27 @@
 
         <form id="permissionScreen">
 
-            <div id="permissionsConfig">
-                <h2>Security Permissions</h2>
-                <hr>
-                <b>URCap1:</b> <label id="Lirum">Temporary</label><br>
-                <hr>
-                <b>URCap2:</b> <label id="Larum">Temporary</label><br>
-                <hr>
+            <h2>Security Permissions</h2>
+            <div id ="selectionDiv">
+                <select id = "permissionList"/>
+                <input id="updatePerm" type="button"/>
             </div>
-
-            <div id="permission">
-
+            <hr>
+            <div id="permissionButtons">
+                <div >
+                    <h3> Networking<h3/><br>
+                        <input id="Networking" type="button"/>
+                </div>
                 <hr>
-                <input id="onOff01" type="button"/>
-                <input id="onOff02" type="button"/>
+                <div>
+                    <h3> Robot Control<h3/><br>
+                        <input id="Robotting" type="button"/>
+                </div>
                 <hr>
-                <input id="onOff01" type="button"/>
-                <input id="onOff02" type="button"/>
-                <hr>
+                <div>
+                    <h3> Shell Usage<h3/><br>
+                        <input id="Shelling" type="button"/>
+                </div>
             </div>
 
         </form>
