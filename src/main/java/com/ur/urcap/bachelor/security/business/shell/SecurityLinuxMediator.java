@@ -32,42 +32,41 @@ public class SecurityLinuxMediator
     private String ls = System.getProperty("line.separator");
     private String fs = System.getProperty("file.separator");
     private String passwdPath;
-    private String elevated;
-    private ShellComService shellCom;
+    private final ShellComService shellCom;
     private String dataPath;
 
-    public SecurityLinuxMediator(String dataFolder)
+    private static SecurityLinuxMediator instance = null;
+
+
+    public static SecurityLinuxMediator getInstance(String dataFolder)
     {
-        dataPath += fs + "var" + fs + dataFolder + fs;
+        if (instance == null)
+        {
+            instance = new SecurityLinuxMediator(dataFolder);
+        }
+        return instance;
+    }
+
+    public static final String[] NEEDED_PROGRAMS =
+    {
+        "whois", "iptables-persistent"
+    };
+
+    private SecurityLinuxMediator(String dataFolder)
+    {
+        dataPath = fs + "var" + fs + dataFolder + fs;
         shellCom = new ShellCommunicator();
-        this.dataPath = dataPath;
         passwdPath = dataPath + "passwd";
-        ShellCommandResponse response;
-        try
-        {
-            response = shellCom.doCommand("whoami");
-            if (response.getOutput().contains("root"))
-            {
-                elevated = "";
-            }
-            else
-            {
-                elevated = "sudo ";
-            }
-        }
-        catch (UnsuccessfulCommandException ex)
-        {
-            Logger.getLogger(SecurityLinuxMediator.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
 
     }
 
     public boolean isRootPassword(String password)
+
     {
         password = password.replace(" ", "\\ ");
         try
         {
-            install("whois");
 
             ShellCommandResponse response = shellCom.doCommand("cat /etc/shadow");
             String s = response.getOutput();
@@ -93,7 +92,7 @@ public class SecurityLinuxMediator
 
     public void changePassword(String password) throws UnsuccessfulCommandException
     {
-       
+
         String[] answers =
         {
             password, password
@@ -180,7 +179,7 @@ public class SecurityLinuxMediator
     {
         try
         {
-            ShellCommandResponse response = shellCom.doCommand(elevated + "dpkg -s " + program);
+            ShellCommandResponse response = shellCom.doCommand("dpkg -s " + program);
             return response.getOutput().contains("Status: install ok installed");
         }
         catch (UnsuccessfulCommandException ex)
@@ -190,86 +189,49 @@ public class SecurityLinuxMediator
         return false;
     }
 
-    public void install(String program) throws UnsuccessfulCommandException
+    public boolean installMissingPrograms() throws UnsuccessfulCommandException
+    {
+        boolean installedAnything = false;
+        for (String neededProgram : NEEDED_PROGRAMS)
+        {
+            installedAnything = install(neededProgram) ? true : installedAnything;
+        }
+        return installedAnything;
+    }
+
+    public boolean neededProgramsInstalled()
+    {
+        for (String neededProgram : NEEDED_PROGRAMS)
+        {
+            if (!isInstalled(neededProgram))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean install(String program) throws UnsuccessfulCommandException
     {
         if (isInstalled(program))
         {
-            return;
+            return false;
         }
-        shellCom.doCommand(elevated + "apt-get -y install " + program);
+        shellCom.doCommand("apt-get -y install " + program);
         if (isInstalled(program))
         {
-            return;
+            return true;
         }
         commentSources(false);
-        shellCom.doCommand(elevated + "apt-get update");
-        shellCom.doCommand(elevated + "apt-get -y install " + program);
+        shellCom.doCommand("apt-get update");
+        shellCom.doCommand("apt-get -y install " + program);
         commentSources(true);
         if (!isInstalled(program))
         {
             throw new UnsuccessfulCommandException(program + " was not installed for unknown reasons");
         }
+        return true;
 
-    }
-
-    public void setVNCPassword(String password) throws UnsuccessfulCommandException
-    {
-
-        File f = new File(passwdPath);
-        shellCom.doCommand(elevated + "mkdir -p " + passwdPath.replace(fs + "passwd", ""));
-        shellCom.doCommand(elevated + "touch " + passwdPath);
-        ShellCommandResponse response = shellCom.doCommand(elevated + "x11vnc --storepasswd " + password + " " + passwdPath);
-
-        if (!response.getOutput().contains("stored passwd in file"))
-        {
-            throw new UnsuccessfulCommandException("Password was not saved properly");
-        }
-    }
-
-    public void startVNC(boolean shared, int port, boolean log, String dataPath) throws UnsuccessfulCommandException
-    {
-        /*
-         -forever: keeps server running after you log out
-         - nodpms: prevents power management saving and keeps display alive
-         - noxdamage: prevents framebuffer issues and lets x11vnc run with screen tearing issues.
-         - rfbport: 5900 is the default port for vnc
-         - display:0 chooses which display to show.
-         - bg : runs process in background
-         - o: location to log the shit.
-         - rfbauth: location password is stored.
-
-         */
-
-        shellCom.doCommand("x11vnc -R stop");
-        String command = elevated + "" + fs + "usr" + fs + "bin" + fs + "x11vnc -forever -nodpms -noxdamage -bg -rfbauth " + passwdPath;
-        command += shared ? " -shared" : "";
-        command += " -rfbport " + port;
-        if (log)
-        {
-            File f;
-            int i = 0;
-            do
-            {
-                f = new File(dataPath + "logFile_" + i + ".log");
-                i++;
-            }
-            while (f.exists());
-
-            shellCom.doCommand(elevated + "touch" + f.getAbsolutePath());
-
-            String logPath = f.getAbsolutePath();
-            command += " -o " + logPath;
-        }
-        shellCom.doCommand(command);
-    }
-
-    public void stopVNC() throws UnsuccessfulCommandException
-    {
-        ShellCommandResponse response = shellCom.doCommand("x11vnc -R stop");
-        if (response.getExitValue() != 0)
-        {
-            throw new UnsuccessfulCommandException("Something went wrong when stoppping the server");
-        }
     }
 
 }

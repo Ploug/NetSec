@@ -13,6 +13,7 @@ import com.ur.urcap.api.ui.component.DivComponent;
 import com.ur.urcap.api.ui.component.InputTextField;
 import com.ur.urcap.api.ui.component.LabelComponent;
 import com.ur.urcap.api.ui.component.SelectDropDownList;
+import com.ur.urcap.bachelor.security.business.Firewall;
 import com.ur.urcap.bachelor.security.business.URCap;
 import com.ur.urcap.bachelor.security.business.shell.SecurityLinuxMediator;
 import com.ur.urcap.bachelor.security.exceptions.UnsuccessfulCommandException;
@@ -38,9 +39,11 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private static final String PERMISSION_NETWORK_BUTTON = "Networking";
     private static final String PERMISSION_SHELL_BUTTON = "Shelling";
     private static final String PERMISSION_UPDATE = "updatePerm";
+    private boolean neededProgramsInstalled;
 
     private DataModel model;
     private SecurityLinuxMediator linMed;
+    private Firewall firewall;
 
     public SecurityInstallationNodeContribution(DataModel model)
     {
@@ -56,9 +59,9 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     @Input(id = PERMISSION_SHELL_BUTTON)
     private InputButton permShellButton;
 
-    @Input (id = PERMISSION_UPDATE)
+    @Input(id = PERMISSION_UPDATE)
     private InputButton permUpdate;
-    
+
     @Div(id = "permissionScreen")
     private DivComponent permissionScreen;
 
@@ -74,6 +77,8 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     @Div(id = "mainScreen")
     private DivComponent mainScreen;
 
+    @Label(id = "informationText")
+    private LabelComponent informationText;
 
     @Label(id = "confirmPswError")
     private LabelComponent confirmPswError;
@@ -201,7 +206,11 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-            changeScreen(passwordScreen);
+            if (neededProgramsInstalled)
+            {
+                changeScreen(passwordScreen);
+            }
+
         }
     }
 
@@ -222,11 +231,13 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         {
             String newPsw = newPswField.getText();
             clearLabels();
+
             if (linMed.isRootPassword(newPsw))
             {
                 newPswError.setText("Same as current password.");
                 return;
             }
+
             if (newPsw.length() < RECOMMENDED_PASSWORD_LENGTH)
             {
                 newPswError.setText("Longer than " + (RECOMMENDED_PASSWORD_LENGTH - 1) + " characters is recommended");
@@ -316,8 +327,63 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     @Override
     public void openView()
     {
+        Thread installMissing = new Thread(new Runnable() // Installing missing programs asynchronously
+        {
+            @Override
+            public void run()
+            {
 
-        linMed = new SecurityLinuxMediator("securityGui");
+                try
+                {
+                    synchronized (informationText)
+                    {
+                        informationText.setText("Installing missing programs...");
+                    }
+
+                    synchronized (linMed)
+                    {
+                        neededProgramsInstalled = linMed.installMissingPrograms();
+                    }
+
+                    synchronized (informationText)
+                    {
+                        informationText.setText("Missing programs were installed correctly!");
+                    }
+                    Thread.sleep(10000);
+
+                    synchronized (informationText)
+                    {
+                        informationText.setText("");
+                    }
+
+                }
+                catch (UnsuccessfulCommandException ex)
+                {
+                    synchronized (informationText)
+                    {
+                        informationText.setText("Could not install missing programs. Something wrong with the network or OS access?");
+                    }
+                }
+                catch (InterruptedException ex)
+                {
+                    Logger.getLogger(SecurityInstallationNodeContribution.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        );
+        if (!linMed.neededProgramsInstalled())
+        {
+            installMissing.start();
+
+        }
+        else
+        {
+            neededProgramsInstalled = true;
+        }
+        
+        firewall = Firewall.getInstance();
+        
+        linMed = SecurityLinuxMediator.getInstance("securityGui");
         permissionsButton.setText("Permissions");
         advSettingsButton.setText("Firewall settings");
         changePswScreenButton.setText("Change Password");
@@ -331,7 +397,10 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         advancedScreen.setVisible(false);
         passwordScreen.setVisible(false);
         permissionList.setItems(URCap.createTestCaps());
+        informationText.setText("");
+
         
+
     }
 
     @Override

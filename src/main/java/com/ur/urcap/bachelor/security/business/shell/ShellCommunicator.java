@@ -12,6 +12,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,9 +21,33 @@ import java.io.PrintWriter;
  */
 public class ShellCommunicator implements ShellComService
 {
+    
+    private String elevated;
+    public ShellCommunicator()
+    {
+        ShellCommandResponse response;
+        try
+        {
+            response = doCommand("whoami");
+            if (response.getOutput().contains("root"))
+            {
+                elevated = "";
+            }
+            else
+            {
+                elevated = "sudo ";
+            }
+        }
+        catch (UnsuccessfulCommandException ex)
+        {
+            Logger.getLogger(SecurityLinuxMediator.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     @Override
     public ShellCommandResponse doCommand(String command, String[] answers) throws UnsuccessfulCommandException
     {
+        command = elevated+command;
         String output = "";
         int exitValue = -1;
         Process p;
@@ -66,6 +92,7 @@ public class ShellCommunicator implements ShellComService
     @Override
     public ShellCommandResponse doCommand(String command) throws UnsuccessfulCommandException
     {
+        command = elevated+command;
         String output = "";
         int exitValue = -1;
         Process p;
