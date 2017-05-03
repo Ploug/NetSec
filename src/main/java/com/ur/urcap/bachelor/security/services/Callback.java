@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.ur.urcap.bachelor.security.business;
+package com.ur.urcap.bachelor.security.services;
 
 /**
  *
  * @author frede
  */
-public class IPTable {
-    
-    
+public interface Callback
+{
+    void call();
 }

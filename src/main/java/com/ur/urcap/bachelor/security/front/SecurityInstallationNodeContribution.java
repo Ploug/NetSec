@@ -327,6 +327,7 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     @Override
     public void openView()
     {
+        linMed = SecurityLinuxMediator.getInstance("securityGui");
         Thread installMissing = new Thread(new Runnable() // Installing missing programs asynchronously
         {
             @Override
@@ -383,7 +384,6 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         
         firewall = Firewall.getInstance();
         
-        linMed = SecurityLinuxMediator.getInstance("securityGui");
         permissionsButton.setText("Permissions");
         advSettingsButton.setText("Firewall settings");
         changePswScreenButton.setText("Change Password");

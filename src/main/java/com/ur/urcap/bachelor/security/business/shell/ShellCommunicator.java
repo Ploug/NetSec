@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class ShellCommunicator implements ShellComService
 {
     
-    private String elevated;
+    private String elevated = "";
     public ShellCommunicator()
     {
         ShellCommandResponse response;
