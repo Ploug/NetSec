@@ -5,11 +5,13 @@
  */
 package com.ur.urcap.bachelor.security.services;
 
+import java.util.List;
+
 /**
  *
  * @author frede
  */
-public interface Callback
+public interface ActivityListener
 {
-    void call();
+    void activityUpdate();
 }

@@ -12,25 +12,55 @@
                 display: inline;
             }
             label{
-                width: 300px;
+                width: 600px;
                 display: inline;
             }
             h1, h2, h3, h4{
                 font-weight: normal;
             }
             #info {
-                display: inline-block;
-                width: 300px;
+                display: block;
+                width: 550px;
 
             }
+
+            #netInfo {
+                display: inline-block;
+                width: 550px;
+
+            }
+            #netButton {
+                display: inline-block;
+                width: 50px;
+
+            } #upNet {
+                display: inline-block;
+                width: 50px;
+
+            }
+            #downNet {
+                display: inline-block;
+                width: 60px;
+
+            }
+
+            #networkActScreen{
+                display: inline-block;
+                width: 600px;
+            }
+
             #config{
                 display: inline-block;
-                width: 300px;
+                width: 220px;
             }
             #seeMore{
                 width: 40%;
                 height: 25px;
                 display: inline-block;
+            }
+            #mainScreen{
+                display: inline-block;
+                width: 600px;
             }
             #permissionScreen{
                 display: inline-block;
@@ -81,21 +111,60 @@
         <form id="mainScreen">
             <h2>Security</h2>
             <h2>&nbsp;</h2>
+            <div >
+                <div id="config">
+                    <h3>Configurations</h3>
+                    <input id="permissions" type="button"/><br>
+                    <input id="advancedSettings" type="button"/><br>
+                    <input id="changePswScreen" type="button"/>
+                </div>
 
-            <div id="config">
-                <h3>Configurations</h3>
-                <input id="permissions" type="button"/><br>
-                <input id="advancedSettings" type="button"/><br>
-                <input id="changePswScreen" type="button"/>
+                <div id="info">
+                    <h3>Activity:</h3>
+                    <label id="act1">temporary</label><br>
+                    <label id="act2">temporary</label><br>
+                    <label id="act3">temporary</label><br>
+                    <label id="act4">temporary</label><br>
+                    <label id="act5">temporary</label><br>
+                    <label id="act6">temporary</label><br>
+                    <input id="seeMore" type="button"/>
+                </div>
+            </div>
+        </form>
+
+        <form id="networkActScreen">
+            <h2>Network activity</h2>
+            <div id="netInfo">
+                <label id="nact1">temporary</label><br>
+                <label id="nact2">temporary</label><br>
+                <label id="nact3">temporary</label><br>
+                <label id="nact4">temporary</label><br>
+                <label id="nact5">temporary</label><br>
+                <label id="nact6">temporary</label><br>
+                <label id="nact7">temporary</label><br>
+                <label id="nact8">temporary</label><br>
+                <label id="nact9">temporary</label><br>
+                <label id="nact10">temporary</label><br>
+                <label id="nact11">temporary</label><br>
+                <label id="nact12">temporary</label><br>
+                <label id="nact13">temporary</label><br>
+                <label id="nact14">temporary</label><br>
+                <label id="nact15">temporary</label><br>
+                <label id="nact16">temporary</label><br>
+                <label id="nact17">temporary</label><br>
+                <label id="nact18">temporary</label><br>
+                <label id="nact19">temporary</label><br>
+                <label id="nact20">temporary</label><br>
+                <label id="nact21">temporary</label><br>
+                <label id="nact22">temporary</label><br>
+            </div>
+            <div id ="netButton">
+                <input id="upNet" type="button"/><br>
+                <input id="downNet" type="button"/><br>
+                <label id="upped">temporary</label><br>
             </div>
 
-            <div id="info">
-                <h3>History</h3>
-                <b>Something Something</b> <br> <label id="ip">xx:yy:zz</label><br>
-                <input id="seeMore" type="button"/>
-            </div>
-            <h2>&nbsp;</h2>
-            <label id="informationText">Temporary</label>
+
         </form>
 
 

@@ -4,6 +4,7 @@ import com.ur.urcap.api.contribution.InstallationNodeContribution;
 import com.ur.urcap.api.contribution.InstallationNodeService;
 import com.ur.urcap.api.domain.URCapAPI;
 import com.ur.urcap.api.domain.data.DataModel;
+import com.ur.urcap.bachelor.security.business.Firewall;
 import java.io.InputStream;
 
 public class SecurityInstallationNodeService implements InstallationNodeService
@@ -11,7 +12,7 @@ public class SecurityInstallationNodeService implements InstallationNodeService
 
     public SecurityInstallationNodeService()
     {
-      
+      Firewall.getInstance(); //initialize
     }
 
     @Override
