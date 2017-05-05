@@ -6,8 +6,8 @@
 package com.ur.urcap.bachelor.security.business.shell;
 
 import com.ur.urcap.bachelor.security.exceptions.UnsuccessfulCommandException;
-import com.ur.urcap.bachelor.security.services.ShellComService;
-import com.ur.urcap.bachelor.security.services.ShellCommandResponse;
+import com.ur.urcap.bachelor.security.interfaces.ShellComService;
+import com.ur.urcap.bachelor.security.interfaces.ShellCommandResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -98,7 +98,6 @@ public class ShellCommunicator implements ShellComService
         Process p;
         try
         {
-            System.out.println("\ncommand:" + command + "\n");
             p = Runtime.getRuntime().exec(command);
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(p.getInputStream()));

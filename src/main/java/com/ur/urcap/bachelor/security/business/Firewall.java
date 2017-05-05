@@ -7,14 +7,12 @@ package com.ur.urcap.bachelor.security.business;
 
 import com.ur.urcap.bachelor.security.business.shell.ShellCommunicator;
 import com.ur.urcap.bachelor.security.exceptions.UnsuccessfulCommandException;
-import com.ur.urcap.bachelor.security.services.ShellComService;
-import com.ur.urcap.bachelor.security.services.ShellCommandResponse;
+import com.ur.urcap.bachelor.security.interfaces.ShellComService;
+import com.ur.urcap.bachelor.security.interfaces.ShellCommandResponse;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -22,7 +20,8 @@ import net.sf.jIPtables.log.LogListener;
 import net.sf.jIPtables.log.LogTracker;
 import net.sf.jIPtables.log.Packet;
 import net.sf.jIPtables.rules.Chain;
-import com.ur.urcap.bachelor.security.services.ActivityListener;
+import com.ur.urcap.bachelor.security.interfaces.ActivityListener;
+import net.sf.jIPtables.rules.Rule;
 
 /**
  *
@@ -55,7 +54,6 @@ public class Firewall
 
     public static Firewall getInstance()
     {
-
         if (instance == null)
         {
             instance = new Firewall();
@@ -117,13 +115,6 @@ public class Firewall
             if (activityListener != null)
             {
                 activityListener.activityUpdate();
-            }
-
-            System.out.println("count: " + (count++));
-            System.out.println("newPacket: " + newPacket.toString());
-            for (LogActivity s : interestingActivity)
-            {
-                System.out.println(s.toString());
             }
 
         }

@@ -17,7 +17,7 @@ import com.ur.urcap.bachelor.security.business.Firewall;
 import com.ur.urcap.bachelor.security.business.URCap;
 import com.ur.urcap.bachelor.security.business.shell.SecurityLinuxMediator;
 import com.ur.urcap.bachelor.security.exceptions.UnsuccessfulCommandException;
-import com.ur.urcap.bachelor.security.services.ActivityListener;
+import com.ur.urcap.bachelor.security.interfaces.ActivityListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +42,19 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private static final String PERMISSION_UPDATE = "updatePerm";
     private static final String UP_NET = "upNet";
     private static final String DOWN_NET = "downNet";
+    private static final String INPUT_ADV = "inputAdv";
+    private static final String FORWARD_ADV = "forwardAdv";
+    private static final String OUTPUT_ADV = "outputAdv";
+    private static final String RULE_INPUT_FIELD = "ruleInput";
+    private static final String APPEND_ADV = "appendAdv";
+    private static final String INSERT_ADV = "insertAdv";
+    private static final String DELETE_ADV = "deleteAdv";
+    private static final String OPEN_PORT = "openPort";
+    private static final String CLOSE_PORT = "closePort";
+
+    private static final String UP_ADV = "upAdv";
+    private static final String DOWN_ADV = "downAdv";
+
     private boolean neededProgramsInstalled;
 
     private DataModel model;
@@ -52,6 +65,79 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         this.model = model;
     }
+    @Div(id = "advancedScreen")
+    private DivComponent advancedScreen;
+    @Label(id = "rule1")
+    private LabelComponent ruleLabel1;
+    @Label(id = "rule2")
+    private LabelComponent ruleLabel2;
+    @Label(id = "rule3")
+    private LabelComponent ruleLabel3;
+    @Label(id = "rule4")
+    private LabelComponent ruleLabel4;
+    @Label(id = "rule5")
+    private LabelComponent ruleLabel5;
+    @Label(id = "rule6")
+    private LabelComponent ruleLabel6;
+    @Label(id = "rule7")
+    private LabelComponent ruleLabel7;
+    @Label(id = "rule8")
+    private LabelComponent ruleLabel8;
+    @Label(id = "rule9")
+    private LabelComponent ruleLabel9;
+    @Label(id = "rule10")
+    private LabelComponent ruleLabel10;
+    @Label(id = "rule11")
+    private LabelComponent ruleLabel11;
+    @Label(id = "rule12")
+    private LabelComponent ruleLabel12;
+    @Label(id = "rule13")
+    private LabelComponent ruleLabel13;
+    @Label(id = "rule14")
+    private LabelComponent ruleLabel14;
+    @Label(id = "rule15")
+    private LabelComponent ruleLabel15;
+    @Label(id = "rule16")
+    private LabelComponent ruleLabel16;
+    @Label(id = "rule17")
+    private LabelComponent ruleLabel17;
+    @Label(id = "rule18")
+    private LabelComponent ruleLabel18;
+    @Label(id = "rule19")
+    private LabelComponent ruleLabel19;
+    @Label(id = "rule20")
+    private LabelComponent ruleLabel20;
+    @Label(id = "rule21")
+    private LabelComponent ruleLabel21;
+    @Label(id = "rule22")
+    private LabelComponent ruleLabel22;
+    private int upped;
+
+    private final LabelComponent ruleLabels[] = new LabelComponent[22];
+
+    @Input(id = UP_ADV)
+    private InputButton upAdvButton;
+    @Input(id = DOWN_ADV)
+    private InputButton downAdvButton;
+
+    @Input(id = INPUT_ADV)
+    private InputButton inputAdvButton;
+    @Input(id = FORWARD_ADV)
+    private InputButton forwardAdvButton;
+    @Input(id = OUTPUT_ADV)
+    private InputButton outputAdvButton;
+    @Input(id = RULE_INPUT_FIELD)
+    private InputTextField ruleInputFeld;
+    @Input(id = APPEND_ADV)
+    private InputButton appendAdvButton;
+    @Input(id = INSERT_ADV)
+    private InputButton insertAdvButton;
+    @Input(id = DELETE_ADV)
+    private InputButton deleteAdvButton;
+    @Input(id = OPEN_PORT)
+    private InputButton openPortButton;
+    @Input(id = CLOSE_PORT)
+    private InputButton closePortButton;
 
     @Input(id = PERMISSION_ROBOT_BUTTON)
     private InputButton permRobButton;
@@ -67,9 +153,6 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
 
     @Div(id = "permissionScreen")
     private DivComponent permissionScreen;
-
-    @Div(id = "advancedScreen")
-    private DivComponent advancedScreen;
 
     @Div(id = "networkActScreen")
     private DivComponent networkActScreen;
@@ -148,7 +231,6 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private LabelComponent nactivity21;
     @Label(id = "nact22")
     private LabelComponent nactivity22;
-
     private final LabelComponent nactivities[] = new LabelComponent[22];
 
     @Label(id = "confirmPswError")
@@ -183,12 +265,92 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private InputButton seeMoreButton;
     @Input(id = EXITB)
     private InputButton exitButton;
+
     @Input(id = UP_NET)
     private InputButton upNetButton;
     @Input(id = DOWN_NET)
     private InputButton downNetButton;
 
-    private int upped = 0;
+    @Input(id = INPUT_ADV)
+    public void onFnputAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = FORWARD_ADV)
+    public void onForwardAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = OUTPUT_ADV)
+    public void onOutputAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = RULE_INPUT_FIELD)
+    public void onRuleEnter(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_CHANGE)
+        {
+
+        }
+    }
+
+    @Input(id = APPEND_ADV)
+    public void onAppendAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = INSERT_ADV)
+    public void onInsertAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = DELETE_ADV)
+    public void onDeleteAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = OPEN_PORT)
+    public void onOpenPortClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
+
+    @Input(id = CLOSE_PORT)
+    public void onClosePortClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+
+        }
+    }
 
     @Input(id = DOWN_NET)
     public void onDownNetClick(InputEvent event)
@@ -231,10 +393,11 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         permissionScreen.setVisible(permissionScreen == screen);
         mainScreen.setVisible(mainScreen == screen);
-        advancedScreen.setVisible(advancedScreen == screen);
         networkActScreen.setVisible(networkActScreen == screen);
         passwordScreen.setVisible(passwordScreen == screen);
+        advancedScreen.setVisible(advancedScreen == screen);
         exitButton.setVisible(mainScreen != screen);
+        upped = 0;
         clearLabels();
     }
 
@@ -388,9 +551,6 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         String confirmedPsw = confirmPswField.getText();
         String newPsw = newPswField.getText();
         String oldPsw = oldPswField.getText();
-
-        System.out.println(confirmedPsw);
-        System.out.println(newPsw);
         boolean errors = false;
         clearLabels();
         if (newPsw.length() < RECOMMENDED_PASSWORD_LENGTH)
@@ -452,6 +612,43 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         {
             nactivities[i].setText(log[i]);
         }
+    }
+
+    @Input(id = DOWN_ADV)
+    public void onDownAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            if (upped > 0)
+            {
+                upped--;
+                updateRulesTable();
+            }
+
+        }
+    }
+
+    @Input(id = UP_ADV)
+    public void onUpAdvClick(InputEvent event)
+    {
+        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
+        {
+            if (firewall.getAllActivity(0).length >= ruleLabels.length + upped)
+            {
+                upped++;
+                updateRulesTable();
+            }
+
+        }
+    }
+
+    private void updateRulesTable()
+    {
+        /* String[] rules = firewall.getRules("INPUT");
+        for (int i = 0; i < log.length - upped; i++)
+        {
+            nactivities[i].setText(log[i]);
+        } */
     }
 
     @Override
@@ -543,6 +740,29 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         nactivities[19] = nactivity20;
         nactivities[20] = nactivity21;
         nactivities[21] = nactivity22;
+
+        ruleLabels[0] = ruleLabel1;
+        ruleLabels[1] = ruleLabel2;
+        ruleLabels[2] = ruleLabel3;
+        ruleLabels[3] = ruleLabel4;
+        ruleLabels[4] = ruleLabel5;
+        ruleLabels[5] = ruleLabel6;
+        ruleLabels[6] = ruleLabel7;
+        ruleLabels[7] = ruleLabel8;
+        ruleLabels[8] = ruleLabel9;
+        ruleLabels[9] = ruleLabel10;
+        ruleLabels[10] = ruleLabel11;
+        ruleLabels[11] = ruleLabel12;
+        ruleLabels[12] = ruleLabel13;
+        ruleLabels[13] = ruleLabel14;
+        ruleLabels[14] = ruleLabel15;
+        ruleLabels[15] = ruleLabel16;
+        ruleLabels[16] = ruleLabel17;
+        ruleLabels[17] = ruleLabel18;
+        ruleLabels[18] = ruleLabel19;
+        ruleLabels[19] = ruleLabel20;
+        ruleLabels[20] = ruleLabel21;
+        ruleLabels[21] = ruleLabel22;
         firewall.setActivityListener(new ActivityListener()
         {
             @Override
@@ -556,9 +776,13 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         {
             activitie.setText("");
         }
-        for (LabelComponent nactivitie : nactivities)
+        for (LabelComponent nactivity : nactivities)
         {
-            nactivitie.setText("");
+            nactivity.setText("");
+        }
+        for (LabelComponent ruleLabel : ruleLabels)
+        {
+            ruleLabel.setText("");
         }
         updateActivity();
         uppedText.setText(upped + "");
@@ -569,8 +793,22 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         seeMoreButton.setText("See more");
         exitButton.setText("Back");
         permUpdate.setText("Update");
-        downNetButton.setText("v");
-        upNetButton.setText("^");
+        downNetButton.setText("Down");
+        upNetButton.setText("Up");
+        downAdvButton.setText("Down");
+        upAdvButton.setText("Up");
+        inputAdvButton.setText("INPUT");
+        forwardAdvButton.setText("FORWARD");
+        outputAdvButton.setText("OUTPUT");
+
+        appendAdvButton.setText("Append rule");
+        insertAdvButton.setText("Insert rule");
+
+        deleteAdvButton.setText("Delete rule");
+        openPortButton.setText("Open port");
+        closePortButton.setText("Close port");
+
+        informationText.setText("");
         changeScreen(mainScreen);
         permissionList.setItems(URCap.createTestCaps());
 

@@ -23,26 +23,29 @@
                 width: 550px;
 
             }
+            #advInfo {
+                display: inline-block;
+                width: 530px;
+
+            }
 
             #netInfo {
                 display: inline-block;
-                width: 550px;
+                width: 530px;
 
             }
-            #netButton {
-                display: inline-block;
-                width: 50px;
+            #netButton {display: inline-block;width: 70px;}
+            #upNet {display: inline-block;width: 70px;}
+            #downNet {display: inline-block;width: 70px;}
+            #upped {display: inline-block;width: 70px;}
+            #advButton {display: inline-block;width: 70px;}
+            #ruleEditingMenu{display: block;width: 600px;}
+            #upAdv {display: inline-block;width: 70px;}
+            #downAdv {display: inline-block;width: 70px;}
+            #inputAdv {display: inline-block;width: 70px;}
+            #forwardAdv {display: inline-block;width: 70px;}
+            #outputAdv {display: inline-block;width: 70px;}
 
-            } #upNet {
-                display: inline-block;
-                width: 50px;
-
-            }
-            #downNet {
-                display: inline-block;
-                width: 60px;
-
-            }
 
             #networkActScreen{
                 display: inline-block;
@@ -53,6 +56,7 @@
                 display: inline-block;
                 width: 220px;
             }
+            
             #seeMore{
                 width: 40%;
                 height: 25px;
@@ -127,9 +131,14 @@
                     <label id="act4">temporary</label><br>
                     <label id="act5">temporary</label><br>
                     <label id="act6">temporary</label><br>
-                    <input id="seeMore" type="button"/>
+                    <input id="seeMore" type="button"/><br>
+                    <h2>&nbsp;</h2>
+                    <input id="openPort"  type="button"/><br>
+                    <input id="closePort"  type="button"/>
                 </div>
             </div>
+            <h2>&nbsp;</h2>
+            <label id="informationText">Temporary</label>
         </form>
 
         <form id="networkActScreen">
@@ -158,9 +167,9 @@
                 <label id="nact21">temporary</label><br>
                 <label id="nact22">temporary</label><br>
             </div>
-            <div id ="netButton">
-                <input id="upNet" type="button"/><br>
-                <input id="downNet" type="button"/><br>
+            <div id ="netButton" >
+                <input id="upNet"  type="button"/><br>
+                <input id="downNet"  type="button"/><br>
                 <label id="upped">temporary</label><br>
             </div>
 
@@ -198,40 +207,43 @@
         <form  id="advancedScreen">
 
 
-            <div id="name">
-                <h2>Security Permissions</h2>
-                <label id="Lirum"><b>Name</b></label><br>
-                <hr>
-                <label id="Lirum">URCap1</label><br>
-                <hr>
-                <label id="Larum">URCap2</label><br>
-                <hr>
+            <h2>IPTables rules</h2>
+            <div id="advInfo">
+                <label id="rule1">temporary</label><br>
+                <label id="rule2">temporary</label><br>
+                <label id="rule3">temporary</label><br>
+                <label id="rule4">temporary</label><br>
+                <label id="rule5">temporary</label><br>
+                <label id="rule6">temporary</label><br>
+                <label id="rule7">temporary</label><br>
+                <label id="rule8">temporary</label><br>
+                <label id="rule9">temporary</label><br>
+                <label id="rule10">temporary</label><br>
+                <label id="rule11">temporary</label><br>
+                <label id="rule12">temporary</label><br>
+                <label id="rule13">temporary</label><br>
+                <label id="rule14">temporary</label><br>
+                <label id="rule15">temporary</label><br>
+                <label id="rule16">temporary</label><br>
+                <label id="rule17">temporary</label><br>
+                <label id="rule18">temporary</label><br>
+                <label id="rule19">temporary</label><br>
+                <label id="rule20">temporary</label><br>
+                <label id="rule21">temporary</label><br>
+                <label id="rule22">temporary</label><br>
             </div>
-
-            <div id="id">
-                <label id="Lirum"><b>ID</b></label><br>
-                <hr>
-                <label id="Lirum">U01</label><br>
-                <hr>
-                <label id="Lirum">U02</label><br>
-                <hr>
+            <div id ="advButton" >
+                <input id="upAdv" type="button"/><br>
+                <input id="downAdv"  type="button"/><br>
+                <input id="inputAdv"  type="button"/><br>
+                <input id="forwardAdv"  type="button"/><br>
+                <input id="outputAdv" type="button"/><br>
             </div>
-            <div id="Xx">
-                <label id="Lirum"><b>Xx</b></label><br>
-                <hr>
-                <label id="Lirum">Xx</label><br>
-                <hr>
-                <label id="Lirum">Xx</label><br>
-                <hr>
-            </div>
-
-            <div id="Yy">
-                <label id="Lirum"><b>Yy</b></label><br>
-                <hr>
-                <label id="Lirum">Yy</label><br>
-                <hr>
-                <label id="Lirum">Yy</label><br>
-                <hr>
+            <div id ="ruleEditingMenu" >
+                <input id="ruleInput" type="text"/>
+                <input id="appendAdv"  type="button"/>
+                <input id="insertAdv"  type="button"/>
+                <input id="deleteAdv"  type="button"/>
             </div>
 
 
