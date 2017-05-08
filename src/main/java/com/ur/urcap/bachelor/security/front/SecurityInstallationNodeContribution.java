@@ -46,11 +46,16 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private static final String FORWARD_ADV = "forwardAdv";
     private static final String OUTPUT_ADV = "outputAdv";
     private static final String RULE_INPUT_FIELD = "ruleInput";
-    private static final String APPEND_ADV = "appendAdv";
     private static final String INSERT_ADV = "insertAdv";
     private static final String DELETE_ADV = "deleteAdv";
     private static final String OPEN_PORT = "openPort";
     private static final String CLOSE_PORT = "closePort";
+    private static final String INPUT_PORT = "portInput";
+
+    private static final String OPEN_PORT_TEXT = "Open port";
+    private static final String ACCEPT_PORT_TEXT = "Accept";
+    private static final String CANCEL_PORT_TEXT = "Cancel";
+    private static final String CLOSE_PORT_TEXT = "Close port";
 
     private static final String UP_ADV = "upAdv";
     private static final String DOWN_ADV = "downAdv";
@@ -60,6 +65,8 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private DataModel model;
     private SecurityLinuxMediator linMed;
     private Firewall firewall;
+
+    Firewall.ChainType activeTab = Firewall.ChainType.INPUT;
 
     public SecurityInstallationNodeContribution(DataModel model)
     {
@@ -122,14 +129,16 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
 
     @Input(id = INPUT_ADV)
     private InputButton inputAdvButton;
+
+    @Input(id = INPUT_PORT)
+    private InputTextField inputPortField;
+
     @Input(id = FORWARD_ADV)
     private InputButton forwardAdvButton;
     @Input(id = OUTPUT_ADV)
     private InputButton outputAdvButton;
     @Input(id = RULE_INPUT_FIELD)
-    private InputTextField ruleInputFeld;
-    @Input(id = APPEND_ADV)
-    private InputButton appendAdvButton;
+    private InputTextField ruleInputField;
     @Input(id = INSERT_ADV)
     private InputButton insertAdvButton;
     @Input(id = DELETE_ADV)
@@ -272,11 +281,13 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     private InputButton downNetButton;
 
     @Input(id = INPUT_ADV)
-    public void onFnputAdvClick(InputEvent event)
+    public void onInputAdvClick(InputEvent event)
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-
+            activeTab = Firewall.ChainType.INPUT;
+            upped = 0;
+            updateRulesTable();
         }
     }
 
@@ -285,7 +296,9 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-
+            activeTab = Firewall.ChainType.FORWARD;
+            upped = 0;
+            updateRulesTable();
         }
     }
 
@@ -294,25 +307,9 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-
-        }
-    }
-
-    @Input(id = RULE_INPUT_FIELD)
-    public void onRuleEnter(InputEvent event)
-    {
-        if (event.getEventType() == InputEvent.EventType.ON_CHANGE)
-        {
-
-        }
-    }
-
-    @Input(id = APPEND_ADV)
-    public void onAppendAdvClick(InputEvent event)
-    {
-        if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
-        {
-
+            activeTab = Firewall.ChainType.OUTPUT;
+            upped = 0;
+            updateRulesTable();
         }
     }
 
@@ -321,7 +318,16 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-
+            try
+            {
+                firewall.insertRule(ruleInputField.getText(), activeTab, upped + 1);
+            }
+            catch (UnsuccessfulCommandException ex)
+            {
+                System.out.println("Bad rule");
+            }
+            ruleInputField.setText("");
+            updateRulesTable();
         }
     }
 
@@ -330,7 +336,34 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
+            try
+            {
+                firewall.deleteRule(activeTab, upped + 1);
+            }
+            catch (UnsuccessfulCommandException ex)
+            {
+                System.out.println("Probably a bad rule number to delete");
+            }
+            updateRulesTable();
+        }
+    }
 
+    boolean openingPortOngoing = false;
+    boolean closingPortOngoing = false;
+
+    private void choosingPort(boolean value)
+    {
+        if (!value)
+        {
+            openPortButton.setText(OPEN_PORT_TEXT);
+            closePortButton.setText(CLOSE_PORT_TEXT);
+            inputPortField.setVisible(false);
+        }
+        else
+        {
+            openPortButton.setText(ACCEPT_PORT_TEXT);
+            closePortButton.setText(CANCEL_PORT_TEXT);
+            inputPortField.setVisible(true);
         }
     }
 
@@ -339,6 +372,35 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
+            if (closingPortOngoing || openingPortOngoing)
+            {
+                int port = Integer.parseInt(inputPortField.getText()); // Its from a number input handler, it should only be an integer.
+                try
+                {
+                    if (closingPortOngoing)
+                    {
+                        firewall.closePort(port);
+                    }
+                    else
+                    {
+                        firewall.openPort(port);
+                    }
+                }
+                catch (UnsuccessfulCommandException ex)
+                {
+                    System.out.println("Something went wrong when changing the openness of the port.");
+                }
+
+                closingPortOngoing = false;
+                openingPortOngoing = false;
+                choosingPort(false);
+            }
+            else
+            {
+                openingPortOngoing = true;
+
+                choosingPort(true);
+            }
 
         }
     }
@@ -348,7 +410,19 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
+            if (closingPortOngoing || openingPortOngoing)
+            {
 
+                closingPortOngoing = false;
+                openingPortOngoing = false;
+                choosingPort(false);
+
+            }
+            else
+            {
+                closingPortOngoing = true;
+                choosingPort(true);
+            }
         }
     }
 
@@ -371,7 +445,7 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-            if (firewall.getAllActivity(0).length >= nactivities.length + upped)
+            if (firewall.getAllActivity().length > nactivities.length + upped)
             {
                 upped++;
                 updateActivity();
@@ -475,6 +549,7 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
+            updateRulesTable();
             changeScreen(advancedScreen);
         }
     }
@@ -580,7 +655,7 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         try
         {
             linMed.changePassword(newPsw);
-            passwordScreenMessage.setText("System password changed!");
+            passwordScreenMessage.setText("System password changed! REMEMBER the password.");
         }
         catch (UnsuccessfulCommandException ex)
         {
@@ -593,6 +668,7 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
 
     private void clearLabels()
     {
+        uppedText.setText(upped + "");
         confirmPswError.setText("");
         oldPswError.setText("");
         newPswError.setText("");
@@ -607,11 +683,46 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         {
             activities[i].setText(log[i]);
         }
-        log = firewall.getAllActivity(nactivities.length + upped);
-        for (int i = 0; i < log.length - upped; i++)
+        log = firewall.getAllActivity();
+
+        for (int i = 0; i < nactivities.length; i++)
         {
-            nactivities[i].setText(log[i]);
+            int position = log.length - nactivities.length + i - upped;
+            if (position >= 0 && position < log.length)
+            {
+                nactivities[i].setText(log[position]);
+            }
+            else
+            {
+                nactivities[i].setText("");
+            }
+
         }
+
+    }
+
+    private void updateRulesTable()
+    {
+        String[] rules = firewall.getRules(activeTab);
+
+        int difference = upped - Math.abs(rules.length - ruleLabels.length) - 1;
+        int relativeSelected = difference < 0 ? 0 : difference;
+        for (int i = 0; i < ruleLabels.length; i++)
+        {
+
+            ruleLabels[i].setEnabled(false);
+
+            if (i < rules.length - upped + relativeSelected)
+            {
+                ruleLabels[i].setText(rules[i + upped - relativeSelected]);
+            }
+            else
+            {
+                ruleLabels[i].setText("");
+            }
+
+        }
+        ruleLabels[relativeSelected].setEnabled(true);
     }
 
     @Input(id = DOWN_ADV)
@@ -619,12 +730,12 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-            if (upped > 0)
+
+            if (firewall.getRules(activeTab).length - 1 > upped)
             {
-                upped--;
+                upped++;
                 updateRulesTable();
             }
-
         }
     }
 
@@ -633,22 +744,12 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
     {
         if (event.getEventType() == InputEvent.EventType.ON_PRESSED)
         {
-            if (firewall.getAllActivity(0).length >= ruleLabels.length + upped)
+            if (upped > 0)
             {
-                upped++;
+                upped--;
                 updateRulesTable();
             }
-
         }
-    }
-
-    private void updateRulesTable()
-    {
-        /* String[] rules = firewall.getRules("INPUT");
-        for (int i = 0; i < log.length - upped; i++)
-        {
-            nactivities[i].setText(log[i]);
-        } */
     }
 
     @Override
@@ -801,12 +902,13 @@ public class SecurityInstallationNodeContribution implements InstallationNodeCon
         forwardAdvButton.setText("FORWARD");
         outputAdvButton.setText("OUTPUT");
 
-        appendAdvButton.setText("Append rule");
         insertAdvButton.setText("Insert rule");
 
-        deleteAdvButton.setText("Delete rule");
+        deleteAdvButton.setText("Delete");
         openPortButton.setText("Open port");
         closePortButton.setText("Close port");
+        inputPortField.setText("5900");
+        inputPortField.setVisible(false);
 
         informationText.setText("");
         changeScreen(mainScreen);

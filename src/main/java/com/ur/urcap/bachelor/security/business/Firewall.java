@@ -19,9 +19,12 @@ import java.util.regex.Pattern;
 import net.sf.jIPtables.log.LogListener;
 import net.sf.jIPtables.log.LogTracker;
 import net.sf.jIPtables.log.Packet;
-import net.sf.jIPtables.rules.Chain;
 import com.ur.urcap.bachelor.security.interfaces.ActivityListener;
+import java.io.IOException;
+import net.sf.jIPtables.rules.Chain;
+import net.sf.jIPtables.rules.IPTables;
 import net.sf.jIPtables.rules.Rule;
+import net.sf.jIPtables.rules.RuleSet;
 
 /**
  *
@@ -30,8 +33,6 @@ import net.sf.jIPtables.rules.Rule;
 public class Firewall
 {
 
-    private Chain output;
-    private Chain input;
     private ShellComService shellCom;
     private final String folderName = "Firewall";
     private final String fs = System.getProperty("file.separator");
@@ -137,22 +138,15 @@ public class Firewall
 
     }
 
-    public String[] getAllActivity(int amount)
+    public String[] getAllActivity()
     {
 
         String[] retVal;
-        if (amount > allActivity.size() || amount < 1)
-        {
-            retVal = new String[allActivity.size()];
-        }
-        else
-        {
-            retVal = new String[amount];
-        }
+        retVal = new String[allActivity.size()];
 
         for (int i = 0; i < retVal.length; i++)
         {
-            retVal[i] = allActivity.get(allActivity.size() - retVal.length + i).toString(); // Getting "amount" latest
+            retVal[i] = allActivity.get(i).toString();
         }
 
         return retVal;
@@ -188,10 +182,9 @@ public class Firewall
     private void setDefaultRules()
     {
         try
-        {   //for portscanning protection
-            shellCom.doCommand("iptables -N port-scanning");
+        {
             // drop all incoming packets by default, accept forwarding and output packets by default
-            shellCom.doCommand("iptables --policy INPUT ACCEPT");
+            shellCom.doCommand("iptables --policy INPUT DROP");
             shellCom.doCommand("iptables --policy FORWARD ACCEPT");
             shellCom.doCommand("iptables --policy OUTPUT ACCEPT");
         }
@@ -210,10 +203,7 @@ public class Firewall
         appendIpTablesRule("INPUT -p tcp --dport ssh -m conntrack --ctstate NEW -m recent --set");
         appendIpTablesRule("INPUT -p tcp --dport ssh -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 10 -j NFLOG --nflog-prefix SSHBRUTE"); // Logging ssh brute attempts
         appendIpTablesRule("INPUT -p tcp --dport ssh -m conntrack --ctstate NEW -m recent --update --seconds 60 --hitcount 10 -j DROP  ");
-        //Port scanning protection
-        appendIpTablesRule("port-scanning -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s --limit-burst 2 -j RETURN ");
-        appendIpTablesRule("port-scanning -j NFLOG --nflog-prefix PORTSCAN"); // Logging port scanning attempts
-        appendIpTablesRule("port-scanning -j DROP");
+
         //Allow http and ssh tcp connections
         appendIpTablesRule("INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j NFLOG --nflog-prefix SSHATTEMPT");
         appendIpTablesRule("INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT");
@@ -241,11 +231,12 @@ public class Firewall
      *
      * @param port the port number to accept
      */
-    public void acceptPort(int port) throws UnsuccessfulCommandException
+    public void openPort(int port) throws UnsuccessfulCommandException
     {
         if (port > 0 && port < 65536)
         {
             appendIpTablesRule("INPUT -p tcp --dport " + port + " -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT");
+            appendIpTablesRule("INPUT -p udp --dport " + port + " -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT");
         }
         else
         {
@@ -259,23 +250,26 @@ public class Firewall
      *
      * @param port the port number to deny
      */
-    public void denyPort(int port) throws UnsuccessfulCommandException
+    public void closePort(int port) throws UnsuccessfulCommandException
     {
-        if (port > 0 && port < 65535)
+        try
         {
-            try
+            List<Rule> inputRules = IPTables.getCurrentRules().getTable(RuleSet.TableType.FILTER).getChain("INPUT").getRules();
+
+            int deletedCount = 1;
+            for (int i = 0; i < inputRules.size(); i++)
             {
-                shellCom.doCommand("iptables -D INPUT -p tcp --dport " + port + " -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT");
-            }
-            catch (UnsuccessfulCommandException ex)
-            {
-                Logger.getLogger(Firewall.class.getName()).log(Level.SEVERE, null, ex);
+                Rule rule = inputRules.get(i);
+                if (rule.getOption("--dport").equals(port + ""))
+                {
+                    shellCom.doCommand("iptables -D INPUT " + (i + deletedCount--)); // Dont break because udp and tcp both can contain --dport
+                }
             }
 
         }
-        else
+        catch (IOException ex)
         {
-            throw new UnsuccessfulCommandException("Port is not correct range");
+            Logger.getLogger(Firewall.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -333,6 +327,66 @@ public class Firewall
         {
             Logger.getLogger(Firewall.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void deleteRule(ChainType activeTab, int ruleNum) throws UnsuccessfulCommandException
+    {
+
+        ShellCommandResponse response = shellCom.doCommand("iptables -D " + activeTab.name() + " " + ruleNum);
+        if (response.getExitValue() != 0)
+        {
+            throw new UnsuccessfulCommandException("Rule number does not exist");
+        }
+
+    }
+
+    public void insertRule(String text, ChainType activeTab, int number) throws UnsuccessfulCommandException
+    {
+
+        String rule = activeTab.name() + " " + text;
+        int spaceIndex = rule.indexOf(" ");
+        String s = rule.substring(0, spaceIndex + 1);
+        String s2 = rule.substring(spaceIndex);
+        String actualRule = s + number + s2;
+
+        // Only do stuff if it isn't already done
+        ShellCommandResponse response = shellCom.doCommand("iptables -C " + rule);
+        if (response.getExitValue() != 0)
+        {
+            shellCom.doCommand("iptables -I " + actualRule);
+        }
+        else
+        {
+            throw new UnsuccessfulCommandException("Rule is already in the chain somewhere");
+        }
+    }
+
+    public enum ChainType
+    {
+        INPUT, FORWARD, OUTPUT
+    };
+
+    public String[] getRules(ChainType type)
+    {
+
+        String[] retval = null;
+
+        try
+        {
+            List<Rule> selected = IPTables.getCurrentRules().getTable(RuleSet.TableType.FILTER).getChain(type.name()).getRules();
+
+            retval = new String[selected.size()];
+            for (int i = 0; i < retval.length; i++)
+            {
+                retval[i] = selected.get(i).toString().replace("Rule", ((i + 1) + ":")); // Getting "amount" latest
+            }
+        }
+        catch (IOException ex)
+        {
+            Logger.getLogger(Firewall.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return retval;
     }
 
     // Helper method
